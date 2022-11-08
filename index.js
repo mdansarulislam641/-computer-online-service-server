@@ -80,10 +80,6 @@ app.get('/service/:id',async(req, res)=>{
 run()
 
 
-
-
-
-
 app.listen(process.env.PORT,()=>{
     console.log(`server connected on port ${process.env.PORT}`)
 })
