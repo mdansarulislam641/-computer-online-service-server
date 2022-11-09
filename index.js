@@ -127,6 +127,21 @@ app.get('/reviews',async(req, res)=>{
 })
 
 
+// delete review a single users
+app.delete('/review/:id',async(req, res)=>{
+ try{
+  const id = req.params.id ;
+  console.log(id)
+  const query = {_id:ObjectId(id)}
+  const cursor =await reviewCollection.deleteOne(query)
+  res.send(cursor)
+ }
+ catch(e){
+  console.log(e.message)
+ }
+})
+
+
 run()
 
 
