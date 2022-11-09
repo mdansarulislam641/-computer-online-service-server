@@ -112,6 +112,21 @@ app.get('/review/:id',async(req, res)=>{
 
 })
 
+// get one review for update review
+app.get('/reviewUpdate/:id',async(req,res)=>{
+try{
+  const id = req.params.id ;
+  const query = {_id: ObjectId(id)}
+  const cursor =await reviewCollection.findOne(query)
+  res.send(cursor)
+}
+catch(e){
+  console.log(e.message)
+}
+
+})
+
+
 // get only self user review
 app.get('/reviews',async(req, res)=>{
   let query = {}
@@ -126,7 +141,20 @@ app.get('/reviews',async(req, res)=>{
 
 })
 
-
+// update one review for update review
+app.patch('/reviews/:id',async(req,res)=>{
+  try{
+    const id = req.params.id ;
+    console.log(req.body)
+    const cursor = await reviewCollection.updateOne({_id: ObjectId(id)} , { $set: req.body})
+    res.send(cursor)
+  }
+  catch(e){
+    console.log(e.message)
+  }
+  
+  })
+  
 // delete review a single users
 app.delete('/review/:id',async(req, res)=>{
  try{
