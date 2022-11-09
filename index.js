@@ -102,6 +102,17 @@ app.get('/review',async(req, res)=>{
 })
 
 
+// get review for a special service
+app.get('/review/:id',async(req, res)=>{
+  const id = req.params.id ;
+  const query = {service_id: id}
+  const cursor = reviewCollection.find(query)
+  const result = await cursor.toArray()
+  res.send(result);
+
+})
+
+
 run()
 
 
