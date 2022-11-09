@@ -25,7 +25,7 @@ async function run(){
 }
 
 const serviceCollection = client.db("onlineServices").collection("serviceUser")
-
+// post new  service or user new service add 
 app.post('/service', async(req, res )=>{
   try{
     const submit = req.body ;
@@ -49,6 +49,7 @@ app.get('/service',async(req, res)=>{
     console.log(error.message)
    }
 })
+
 
 
 // get service for all service item
@@ -75,7 +76,6 @@ app.get('/service/:id',async(req, res)=>{
 
     
 })
-
 
 run()
 
