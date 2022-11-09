@@ -77,6 +77,31 @@ app.get('/service/:id',async(req, res)=>{
     
 })
 
+
+const reviewCollection = client.db("onlineServices").collection("userReview")
+// post user review service 
+app.post('/review',async(req, res)=>{
+  try{
+    const review = req.body ;
+  const cursor = await reviewCollection.insertOne(review)
+  res.send(cursor)
+  }
+  catch(e){
+    console.log(e.message)
+  }
+})
+
+
+// get review user 
+app.get('/review',async(req, res)=>{
+  const query = {}
+  const cursor = reviewCollection.find(query)
+  const result = await cursor.toArray()
+  res.send(result)
+
+})
+
+
 run()
 
 
