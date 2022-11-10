@@ -125,7 +125,7 @@ app.post('/review',async(req, res)=>{
 
 
 // get review user 
-app.get('/review',async(req, res)=>{
+app.get('/review',verifyJWT,async(req, res)=>{
   const query = {}
   const cursor = reviewCollection.find(query)
   const result = await cursor.toArray()
