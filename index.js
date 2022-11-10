@@ -3,13 +3,33 @@ const app = express();
 require('dotenv').config()
 const cors = require('cors');
 const { MongoClient, ObjectId } = require('mongodb');
-
+const jwt = require('jsonwebtoken');
 app.use(cors())
 app.use(express.json())
 
 app.get('/',(req, res)=>{
     res.send({status:true,message:"it's works"})
 })
+
+// jwt function
+function verifyJWT(req, res, next){
+  
+  const authHeader = req.headers.authorization;
+  if(!authHeader){
+    return res.status(403).send({message:"unauthorized access"})
+  }
+  const token = authHeader.split(' ')[1]
+  jwt.verify(token,process.env.JWT_SECRET,function(error, decoded){
+    if(error){
+      return res.status(401).send({message:"unauthorized access"})
+    }
+    req.decoded = decoded;
+    next()
+  })
+ 
+}
+
+
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.fg2t6rb.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -23,6 +43,18 @@ async function run(){
         console.log(error.message)
     }
 }
+
+// jwt token 
+app.post('/jwt',(req, res)=>{
+  try{
+    const user = req.body ;
+  const token = jwt.sign(user, process.env.JWT_SECRET, {expiresIn:'7d'})
+  res.send({token})
+  }
+  catch(error){
+    console.log(error.message)
+  }
+})
 
 const serviceCollection = client.db("onlineServices").collection("serviceUser")
 // post new  service or user new service add 
@@ -128,10 +160,13 @@ catch(e){
 
 
 // get only self user review
-app.get('/reviews',async(req, res)=>{
+app.get('/reviews',verifyJWT,async(req, res)=>{
+ const decoded = req.decoded;
+if(decoded.email !== req.query.email){
+  res.status(401).send({message:"unauthorized user"})
+}
   let query = {}
   const email = req.query.email ;
-  // console.log(email)
   if(email){
     query={email:email}
   }
