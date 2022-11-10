@@ -73,8 +73,8 @@ app.post('/service', async(req, res )=>{
 app.get('/service',async(req, res)=>{
    try{
     const query = {};
-    const cursor = serviceCollection.find(query).limit(3)
-    const result = await cursor.toArray() ;
+    const cursor = serviceCollection.find(query)
+    const result = await cursor.limit(3).sort({createdAt:-1}).toArray() ;
     res.send(result)
    }
    catch(error){
@@ -89,7 +89,7 @@ app.get('/services/allServices',async(req, res)=>{
    try{
     const query = {};
     const cursor = serviceCollection.find(query)
-    const result = await cursor.toArray()
+    const result = await cursor.sort({createdAt:-1}).toArray()
     res.send(result);
    }
    catch(error){
@@ -139,7 +139,7 @@ app.get('/review/:id',async(req, res)=>{
   const id = req.params.id ;
   const query = {service_id: id}
   const cursor = reviewCollection.find(query)
-  const result = await cursor.toArray()
+  const result = await cursor.sort({createdAt: -1}).toArray()
   res.send(result);
 
 })
@@ -171,7 +171,7 @@ if(decoded.email !== req.query.email){
     query={email:email}
   }
   const cursor = reviewCollection.find(query)
-  const result = await cursor.toArray()
+  const result = await cursor.sort({createdAt:-1}).toArray()
   res.send(result)
 
 })
